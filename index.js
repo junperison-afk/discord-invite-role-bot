@@ -14,8 +14,11 @@ const INVITE_TO_ROLE = {
 
 // 直近の招待使用回数をキャッシュして、どの招待が使われたか特定する
 const guildInvitesCache = new Map(); // guildId -> Map<inviteCode, uses>
+let hasInitializedReady = false;
 
-client.once('ready', async () => {
+async function handleClientReady() {
+    if (hasInitializedReady) return;
+    hasInitializedReady = true;
     console.log(`Logged in as ${client.user.tag}!`);
     try {
         const guild = await client.guilds.fetch(GUILD_ID);
@@ -25,7 +28,10 @@ client.once('ready', async () => {
     } catch (error) {
         console.error('初期招待キャッシュの取得に失敗しました:', error.message || error);
     }
-});
+}
+
+client.once('ready', handleClientReady);       // v14 互換
+client.once('clientReady', handleClientReady); // v15 以降
 
 // 招待が作成/削除された場合もキャッシュを更新
 client.on('inviteCreate', async (invite) => {
@@ -53,6 +59,26 @@ client.on('guildMemberAdd', async (member) => {
     if (member.guild.id !== GUILD_ID) return;
 
     try {
+        // Onboarding（Membership Screening）が有効な場合、pending=trueの間はロール付与できないため待機
+        if (member.pending) {
+            console.log(`Member ${member.user.tag} is pending onboarding. Waiting to complete before assigning role.`);
+            try {
+                await member.fetch(true);
+            } catch (_) {}
+            const started = Date.now();
+            const timeoutMs = 5 * 60 * 1000; // 最大5分待機
+            while (member.pending && Date.now() - started < timeoutMs) {
+                await new Promise(r => setTimeout(r, 3000));
+                try {
+                    await member.fetch(true);
+                } catch (_) {}
+            }
+            if (member.pending) {
+                console.log(`Onboarding not completed within timeout for ${member.user.tag}. Skipping role assignment for now.`);
+                return;
+            }
+        }
+
         const previous = guildInvitesCache.get(GUILD_ID) || new Map();
         const currentInvites = await member.guild.invites.fetch();
 
