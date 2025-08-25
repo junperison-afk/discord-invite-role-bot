@@ -12,6 +12,9 @@ const INVITE_TO_ROLE = {
     '有料の招待コード': '1409136534703181876'
 };
 
+// 設定済みの招待コード集合（比較対象を限定して精度を上げる）
+const CONFIGURED_INVITE_CODES = new Set(Object.keys(INVITE_TO_ROLE));
+
 // 直近の招待使用回数をキャッシュして、どの招待が使われたか特定する
 const guildInvitesCache = new Map(); // guildId -> Map<inviteCode, uses>
 let hasInitializedReady = false;
@@ -85,9 +88,11 @@ client.on('guildMemberAdd', async (member) => {
         const maxAttempts = 3;
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             const currentInvites = await member.guild.invites.fetch();
-            usedInvite = currentInvites.find(inv => (inv.uses ?? 0) > (previous.get(inv.code) ?? 0));
+            // 設定済みコードのみ対象にして差分を検出
+            const configuredCurrent = currentInvites.filter(inv => CONFIGURED_INVITE_CODES.has(inv.code));
+            usedInvite = configuredCurrent.find(inv => (inv.uses ?? 0) > (previous.get(inv.code) ?? 0));
 
-            // キャッシュを更新
+            // キャッシュを更新（全体）
             guildInvitesCache.set(GUILD_ID, new Map(currentInvites.map(inv => [inv.code, inv.uses ?? 0])));
 
             if (usedInvite) break;
@@ -96,8 +101,26 @@ client.on('guildMemberAdd', async (member) => {
             }
         }
 
+        // バニティURL（カスタムURL）が使われた可能性がある場合の検出
         if (!usedInvite) {
-            console.log('どの招待が使われたか特定できませんでした。Bot を先に起動して招待キャッシュを用意し、BotにManage Guild権限があるか、設定した招待コードを使用しているか確認してください。');
+            try {
+                const vanity = await member.guild.fetchVanityData?.();
+                if (vanity?.code) {
+                    if (CONFIGURED_INVITE_CODES.has(vanity.code)) {
+                        // 設定済みバニティコードに対応
+                        usedInvite = { code: vanity.code };
+                        console.log(`Vanity URL used and configured: ${vanity.code}`);
+                    } else {
+                        console.log(`Vanity URL join detected (code: ${vanity.code}). このコードは INVITE_TO_ROLE に設定されていません。`);
+                    }
+                }
+            } catch (_) {
+                // 権限不足または未対応サーバーでは例外になる場合あり
+            }
+        }
+
+        if (!usedInvite) {
+            console.log('どの招待が使われたか特定できませんでした。Bot を先に起動して招待キャッシュを用意し、BotにManage Guild権限があるか、設定した招待コード/バニティURLを使用しているか確認してください。');
             return;
         }
 
