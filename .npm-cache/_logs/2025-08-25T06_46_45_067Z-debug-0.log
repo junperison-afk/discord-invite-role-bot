@@ -1,0 +1,19 @@
+0 verbose cli C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.18.0
+3 silly config load:file:C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\npmrc
+4 silly config load:file:C:\dev\discord-invite-role-bot\.npmrc
+5 silly config load:file:C:\Users\USER\.npmrc
+6 silly config load:file:C:\Users\USER\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm cache clean
+8 verbose argv "cache" "clean" "--force"
+9 verbose logfile logs-max:10 dir:C:\dev\discord-invite-role-bot\.npm-cache\_logs\2025-08-25T06_46_45_067Z-
+10 verbose logfile C:\dev\discord-invite-role-bot\.npm-cache\_logs\2025-08-25T06_46_45_067Z-debug-0.log
+11 warn using --force Recommended protections disabled.
+12 silly logfile done cleaning log files
+13 verbose cwd C:\dev\discord-invite-role-bot
+14 verbose os Windows_NT 10.0.26100
+15 verbose node v22.18.0
+16 verbose npm  v10.9.3
+17 verbose exit 0
+18 info ok

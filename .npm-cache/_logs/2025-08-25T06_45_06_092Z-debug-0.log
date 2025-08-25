@@ -1,0 +1,29 @@
+0 verbose cli C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.18.0
+3 silly config load:file:C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\npmrc
+4 silly config load:file:G:\マイドライブ\JUNPERISON\7_Independent\14_KMC\development\5_ailife\discord-invite-role-bot\.npmrc
+5 silly config load:file:C:\Users\USER\.npmrc
+6 silly config load:file:C:\Users\USER\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm config set tmp .\.tmp
+8 verbose argv "config" "set" "tmp" ".\\.tmp" "--location" "project"
+9 verbose logfile logs-max:10 dir:G:\マイドライブ\JUNPERISON\7_Independent\14_KMC\development\5_ailife\discord-invite-role-bot\.npm-cache\_logs\2025-08-25T06_45_06_092Z-
+10 verbose logfile G:\マイドライブ\JUNPERISON\7_Independent\14_KMC\development\5_ailife\discord-invite-role-bot\.npm-cache\_logs\2025-08-25T06_45_06_092Z-debug-0.log
+11 silly logfile done cleaning log files
+12 info config set "tmp" ".\\.tmp"
+13 verbose stack Error: `tmp` is not a valid npm option
+13 verbose stack     at Config.set (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\commands\config.js:186:15)
+13 verbose stack     at Config.exec (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\commands\config.js:151:20)
+13 verbose stack     at C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\npm.js:255:63
+13 verbose stack     at Object.start (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\node_modules\proc-log\lib\index.js:101:21)
+13 verbose stack     at #exec (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\npm.js:254:17)
+13 verbose stack     at async Npm.exec (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\npm.js:207:9)
+13 verbose stack     at async module.exports (C:\Users\USER\AppData\Local\nvm\v22.18.0\node_modules\npm\lib\cli\entry.js:74:5)
+14 error `tmp` is not a valid npm option
+15 verbose cwd G:\マイドライブ\JUNPERISON\7_Independent\14_KMC\development\5_ailife\discord-invite-role-bot
+16 verbose os Windows_NT 10.0.26100
+17 verbose node v22.18.0
+18 verbose npm  v10.9.3
+19 verbose exit 1
+20 verbose code 1
+21 error A complete log of this run can be found in: G:\マイドライブ\JUNPERISON\7_Independent\14_KMC\development\5_ailife\discord-invite-role-bot\.npm-cache\_logs\2025-08-25T06_45_06_092Z-debug-0.log
