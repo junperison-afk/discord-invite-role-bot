@@ -1,0 +1,14 @@
+# secrets
+.env
+.env.*.local
+
+# deps
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# lock（好みで）
+package-lock.json
