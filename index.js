@@ -80,16 +80,24 @@ client.on('guildMemberAdd', async (member) => {
         }
 
         const previous = guildInvitesCache.get(GUILD_ID) || new Map();
-        const currentInvites = await member.guild.invites.fetch();
 
-        // どの招待の uses が増えたかで使用招待を特定
-        const usedInvite = currentInvites.find(inv => (inv.uses ?? 0) > (previous.get(inv.code) ?? 0));
+        let usedInvite = null;
+        const maxAttempts = 3;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            const currentInvites = await member.guild.invites.fetch();
+            usedInvite = currentInvites.find(inv => (inv.uses ?? 0) > (previous.get(inv.code) ?? 0));
 
-        // キャッシュを更新
-        guildInvitesCache.set(GUILD_ID, new Map(currentInvites.map(inv => [inv.code, inv.uses ?? 0])));
+            // キャッシュを更新
+            guildInvitesCache.set(GUILD_ID, new Map(currentInvites.map(inv => [inv.code, inv.uses ?? 0])));
+
+            if (usedInvite) break;
+            if (attempt < maxAttempts) {
+                await new Promise(r => setTimeout(r, 3000));
+            }
+        }
 
         if (!usedInvite) {
-            console.log('どの招待が使われたか特定できませんでした。Bot を先に起動して招待キャッシュを用意してください。');
+            console.log('どの招待が使われたか特定できませんでした。Bot を先に起動して招待キャッシュを用意し、BotにManage Guild権限があるか、設定した招待コードを使用しているか確認してください。');
             return;
         }
 
